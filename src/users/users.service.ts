@@ -9,9 +9,11 @@ export class UsersService {
   constructor(private prisma: PrismaService) {}
 
   async createUser({ name, email, password }: NewUser): Promise<User> {
-    return this.prisma.user.create({
+    const user = await this.prisma.user.create({
       data: { name, email, password: encryptPassword(password) },
     });
+    delete user.password;
+    return user;
   }
 
   async getUserById(id: string): Promise<User | null> {
