@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:13
+    container_name: db
+    working_dir: /shared
+    restart: always
+    environment:
+      - POSTGRES_DB=${PG_DB}
+      - POSTGRES_USER=${PG_USER}
+      - POSTGRES_PASSWORD=${PG_PASS}
+    volumes:
+      - ./docker/volumes/postgres-data:/var/lib/postgresql/data
+      - ./docker/shared:/shared
+    ports:
+      - '5432:5432'
