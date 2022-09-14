@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { User } from '@prisma/client';
 import { PrismaService } from 'src/prisma';
 import { encryptPassword } from 'src/utils/crypto';
@@ -8,23 +8,28 @@ import { NewUser } from './dto/user.type';
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
-  async createUser({ name, email, password }: NewUser): Promise<User | Error> {
+  async createUser({ name, email, password }: NewUser): Promise<User | null> {
     const hasUser = await this.prisma.user.findUnique({ where: { email } });
-    if (hasUser) throw new BadRequestException('User already exists.');
+
+    if (hasUser) return null;
+
     const user = await this.prisma.user.create({
       data: { name, email, password: encryptPassword(password) },
     });
+
     delete user.password;
     return user;
   }
 
-  async getUserById(id: string): Promise<User | Error> {
-    const user = await this.prisma.user.findUnique({
+  async getUserById(id: string): Promise<User | null> {
+    const user = await this.prisma.user.findFirst({
       where: {
         id,
       },
     });
-    if (!user) throw new BadRequestException('User not found.');
+
+    if (!user) return null;
+
     delete user.password;
     return user;
   }
