@@ -29,13 +29,12 @@ export class UsersService {
     return user;
   }
 
-  async getUserByEmail(email: string): Promise<User | Error> {
+  async getUserByEmail(email: string): Promise<User> {
     const user = await this.prisma.user.findUnique({
       where: {
         email,
       },
     });
-    if (!user) throw new BadRequestException('User not found.');
     return user;
   }
 }
