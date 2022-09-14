@@ -11,12 +11,14 @@ import { UsersService } from './users.service';
 import { NewUser } from './dto/user.type';
 import { User } from '@prisma/client';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { ApiTags } from '@nestjs/swagger';
 
-@Controller()
+@ApiTags('User')
+@Controller('user')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post('registration')
+  @Post()
   async createUser(@Body() { name, email, password }: NewUser): Promise<User> {
     if (!name || !email || !password)
       throw new BadRequestException(
@@ -31,7 +33,7 @@ export class UsersController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('user/:id')
+  @Get(':id')
   async getUserById(@Param('id') id: string): Promise<User> {
     if (!id) throw new BadRequestException('Send user id.');
 
