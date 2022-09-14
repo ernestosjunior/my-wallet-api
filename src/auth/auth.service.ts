@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
 import { UsersService } from 'src/users/users.service';
@@ -17,7 +17,7 @@ export class AuthService {
     const isValidPassword = decryptPassword(password, user.password);
 
     if (!isValidPassword) {
-      throw new Error('Invalid credentials.');
+      throw new BadRequestException('Invalid credentials.');
     }
 
     const token = await this.jwtToken(user);
