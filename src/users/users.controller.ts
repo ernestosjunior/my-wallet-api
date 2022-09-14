@@ -9,13 +9,13 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  async createUser(@Body() user: NewUser): Promise<User> {
+  async createUser(@Body() user: NewUser): Promise<User | Error> {
     return this.usersService.createUser(user);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get(':id')
-  async getUserById(@Param('id') id: string): Promise<User> {
+  async getUserById(@Param('id') id: string): Promise<User | Error> {
     return this.usersService.getUserById(id);
   }
 }
