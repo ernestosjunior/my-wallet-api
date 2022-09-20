@@ -4,7 +4,7 @@ import {
   Body,
   UseGuards,
   Get,
-  Param,
+  Request,
   BadRequestException,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
@@ -33,11 +33,9 @@ export class UsersController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get(':id')
-  async getUserById(@Param('id') id: string): Promise<User> {
-    if (!id) throw new BadRequestException('Send user id.');
-
-    const user = await this.usersService.getUserById(id);
+  @Get()
+  async getUserById(@Request() req: any): Promise<User> {
+    const user = await this.usersService.getUserById(req.user.id);
 
     if (!user) throw new BadRequestException('User not found.');
 

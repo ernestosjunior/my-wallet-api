@@ -4,6 +4,8 @@ import {
   Post,
   Body,
   BadRequestException,
+  Get,
+  Request,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { RecordsService } from './records.service';
@@ -19,11 +21,12 @@ export class RecordsController {
 
   @Post()
   async createUser(
-    @Body() { type, description, value, userId }: NewRecord,
+    @Body() { type, description, value }: NewRecord,
+    @Request() req: any,
   ): Promise<Record> {
-    if (!type || !description || !userId)
+    if (!type || !description)
       throw new BadRequestException(
-        'Send all fields. {type, description, value, userId}.',
+        'Send all fields. {type, description, value}.',
       );
 
     const types = ['entry', 'exit'];
@@ -36,7 +39,12 @@ export class RecordsController {
       type,
       description,
       value,
-      userId,
+      userId: req.user.id,
     });
+  }
+
+  @Get()
+  async getRecordsByUser(@Request() req: any): Promise<Record[]> {
+    return this.recordsService.getRecordsByUser(req.user.id);
   }
 }

@@ -19,4 +19,10 @@ export class RecordsService {
 
     return record;
   }
+
+  async getRecordsByUser(userId: string): Promise<Record[]> {
+    const records = await this.prisma.record.findMany({ where: { userId } });
+
+    return records;
+  }
 }
