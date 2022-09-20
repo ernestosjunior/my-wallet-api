@@ -16,6 +16,8 @@ model User {
   email String @unique
   password String
   records Record[]
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
 }
 
 model Record {
@@ -25,4 +27,6 @@ model Record {
   value Int
   user User @relation(fields: [userId], references: [id])
   userId String
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
 }
