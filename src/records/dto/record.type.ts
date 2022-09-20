@@ -10,6 +10,5 @@ export class NewRecord {
   @ApiProperty()
   value: number;
 
-  @ApiProperty()
   userId: string;
 }
