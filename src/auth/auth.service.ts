@@ -13,7 +13,13 @@ export class AuthService {
   ) {}
 
   async login({ email, password }: AuthInput): Promise<AuthType> {
+    if (!email || !password) {
+      throw new BadRequestException('Send all fields. {email, password}.');
+    }
     const user = await this.usersService.getUserByEmail(email);
+    if (!user) {
+      throw new BadRequestException('User not found.');
+    }
     const isValidPassword = decryptPassword(password, user.password);
 
     if (!isValidPassword) {
